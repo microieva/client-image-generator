@@ -89,12 +89,13 @@ const TaskRow = React.memo(({
       </TableCell>}
       <TableCell align="left">
         <Chip 
-          label={task.status} 
+          label={task.status || 'pending'} 
           color={getStatusColor(task.status)}
           size="small"
         />
       </TableCell>
       <TableCell align="left">
+        { task.progress !== undefined ? 
         <Box display="flex" alignItems="center" gap={1}>
           <Box width="30%" mr={1}>
             <CircularProgress 
@@ -117,11 +118,17 @@ const TaskRow = React.memo(({
               onRefresh(task.taskId, e);
             }}
             title="Refresh progress"
-            sx={{ visibility: task.status === 'completed' ? 'hidden' : 'visible' }}
+            sx={{ visibility: task.status === 'completed' || task.status === 'cancelled' ? 'hidden' : 'visible' }}
           >
             <RefreshIcon fontSize="small" />
           </IconButton>
         </Box>
+        :
+        <Box display="flex" alignItems="center" gap={1}>
+          <CircularProgress size={20} />
+          <Typography variant="body2">Loading...</Typography>
+        </Box>
+        }
       </TableCell>
       <TableCell align="left">{formatDate(task.created_at)}</TableCell>
       <TableCell align="right" sx={{px:0}}>

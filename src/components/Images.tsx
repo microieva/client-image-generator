@@ -82,8 +82,8 @@ export const Images: React.FC = () => {
             {images.map((image) => (
               <ImageListItem key={image.task_id} sx={{maxWidth:isMobile ? '100vw':'45vw', height:isMobile ? 'auto':'45vw'}}>
                 <img
-                  srcSet={image.image_url}
-                  src={image.image_url}
+                  srcSet={`data:image/png;base64,${image.image_url}`}
+                  src={`data:image/png;base64,${image.image_url}`}
                   alt={`Generated image with prompt: ${image.prompt}`}
                   loading="lazy"
                   style={{borderRadius:5, maxHeight:'max-content'}} 

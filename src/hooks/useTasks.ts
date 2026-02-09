@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAnimation } from '../contexts/AnimationContext';
-import { Task, TaskProgress, TasksState } from '../types/api';
+import { Task, TaskProgress, TasksState, TaskData } from '../types/api';
 import { apiClient } from '../config/api';
 import { createEventSource } from '../config/ess';
 
@@ -71,11 +71,13 @@ export const useTasks = () => {
         throw new Error(`Failed to fetch tasks: ${response.status} ${response.statusText}`);
       }
       
-      const data: Record<string, Omit<Task, 'taskId'>> = response.data.tasks;
-      const newTasks: Task[] = Object.entries(data).map(([taskId, taskData]) => ({
-        taskId,
-        ...taskData
-      })).sort((a, b) => {
+      const data: Record<string, TaskData> = response.data.tasks;
+      const newTasks: Task[] = Object.entries(data).map(([id, taskData]) => {
+        return {
+          ...taskData,
+          taskId: taskData.task_id,
+        };
+      }).sort((a, b) => {
         const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
         const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
         return dateB - dateA; 

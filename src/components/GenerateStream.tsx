@@ -30,7 +30,6 @@ const GenerateStream: React.FC = () => {
   const { isDesktop, isMobile } = useDevice();
   
   const {
-    getStream,
     generate,
     cancel,
     reset: resetGeneration,
@@ -39,7 +38,9 @@ const GenerateStream: React.FC = () => {
     progress,
     cancelled,
     status,
-    prompt_str
+    prompt_str,
+    message,
+    result
   } = useCancellableGeneration(id);
 
   useEffect(()=> {
@@ -55,28 +56,22 @@ const GenerateStream: React.FC = () => {
 
   useEffect(()=> { 
     id && prompt_str && setPrompt(prompt_str);
-    const getResult = async ()=> {
-      const result:GenerationResult | null = await getStream();
-      if (result) setGeneratedImage(result.image_url);
-    }
-
-    if (id && status ==='completed') {
-      getResult();  
-      setIsSubmitDisabled(true);
-    }
-  }, [id, prompt_str, status])
+  }, [id, prompt_str])
 
   const handleSubmit = async (e: React.FormEvent) => {
     setIsSubmitDisabled(true);
     e.preventDefault();
     if (!prompt.trim()) return;
     
-    const result: GenerationResult | null = await generate(prompt.trim());
-    if (result && result.image_url) {
-      setGeneratedImage(result.image_url);
-      setIsSubmitDisabled(true);
-    }
+    await generate(prompt.trim());
   };
+
+  useEffect(() => {
+    if (status === 'completed' && result) {
+      const generationResult = result as GenerationResult;
+      setGeneratedImage(generationResult.image);
+    }
+  }, [status, result]);
 
   const handleCancel = async () => {
     setIsExisting(true);
@@ -210,7 +205,7 @@ const GenerateStream: React.FC = () => {
                 role="button"
                 aria-describedby="generate-description" 
               >
-                {loading ? `${status}...` : 'Generate Image'}
+                {loading ? (message || status) : 'Generate Image'}
               </Button>}
             {!error && generatedImage && 
               <>
@@ -420,7 +415,7 @@ const GenerateStream: React.FC = () => {
 
             {generatedImage && 
               <img 
-                src={generatedImage} 
+                src={`data:image/png;base64,${generatedImage}`}
                 alt="Generated image" 
                 className = "animate__animated animated__pulse"
                 style={{ 
