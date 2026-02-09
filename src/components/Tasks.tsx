@@ -214,7 +214,7 @@ export const Tasks: React.FC = () => {
       );
     }
 
-    return tasks.map((task) => (
+    return tasks.map((task: Task) => (
       <TaskRow
         key={task.taskId}
         task={task}
@@ -261,7 +261,7 @@ export const Tasks: React.FC = () => {
               )}
               <IconButton
                 onClick={deleteTasks} 
-                disabled={tasks.length === 0 || Boolean(deletionError) || tasks.every(t => t.status ==='processing')}
+                disabled={tasks.length === 0 || Boolean(deletionError) || tasks.every((t: Task) => t.status ==='processing')}
                 aria-label="Refresh tasks">
                 {isDeleting ? (
                   <CircularProgress size={20} />

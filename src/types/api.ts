@@ -60,3 +60,12 @@ export interface TaskProgress {
   progress: number;
   status: Task['status'];
 }
+
+export interface TasksState {
+  tasks: Task[];
+  loading: boolean;
+  error: string | null;
+  deletionError: string | null;
+  cancellingIds: string[];
+  isDeleting: boolean;
+}

@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAnimation } from '../contexts/AnimationContext';
-import { Task, TaskProgress, TasksState, TaskData } from '../types/api';
+import { Task, TaskProgress, TaskData, TasksState } from '../types/api';
 import { apiClient } from '../config/api';
 import { createEventSource } from '../config/ess';
 
@@ -72,7 +72,7 @@ export const useTasks = () => {
       }
       
       const data: Record<string, TaskData> = response.data.tasks;
-      const newTasks: Task[] = Object.entries(data).map(([id, taskData]) => {
+      const newTasks: Task[] = Object.entries(data).map(([_, taskData]) => {
         return {
           ...taskData,
           taskId: taskData.task_id,
@@ -115,7 +115,7 @@ export const useTasks = () => {
       if (response.status === 200 && response.data.status === 'success') {
         setState(prev => ({
           ...prev,
-          tasks: prev.tasks.map(task => 
+          tasks: prev.tasks.map((task: Task) => 
             task.taskId === taskId 
               ? { ...task, status: 'cancelled' }
               : task
@@ -135,7 +135,7 @@ export const useTasks = () => {
     } finally {
       setState(prev => ({
         ...prev,
-        cancellingIds: prev.cancellingIds.filter(id => id !== taskId)
+        cancellingIds: prev.cancellingIds.filter((id: string) => id !== taskId)
       }));
     }
   }, [state.cancellingIds, updateState]);
