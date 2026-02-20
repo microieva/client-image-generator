@@ -2,8 +2,11 @@ import React from 'react';
 import { Box, Typography, IconButton, Link } from '@mui/material';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Footer: React.FC = () => {
+  const { isDark } = useTheme();
+  
   return (
     <Box
       component="footer"
@@ -54,6 +57,19 @@ const Footer: React.FC = () => {
           sx={{ mx: 0.5 }}
         >
           <GitHubIcon fontSize="small" />
+        </IconButton>
+
+        <IconButton
+          component={Link}
+          href="https://huggingface.co/spaces/microieva/generator/tree/main"
+          target="_blank"
+          rel="noopener noreferrer"
+          color="inherit"
+          size="small"
+          aria-label="HuggingFace"
+          sx={{ mx: 0.5 }}
+        >
+          <img src={isDark ? "/hf_white.png" : "/hf_black.png"} alt="HuggingFace" style={{ width: 22, height: 22 }} />
         </IconButton>
       </Box>
     </Box>
