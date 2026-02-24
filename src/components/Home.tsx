@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAnimation } from "../contexts/AnimationContext";
 import { useDevice } from "../contexts/DeviceContext";
-import { apiClient } from "../config/api";
+import { useCachedApi } from "../hooks/useCachedApi";
 
 export const Home: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -13,32 +13,49 @@ export const Home: React.FC = () => {
   const navigate = useNavigate();
   const { setAnimationType } = useAnimation();
   const { isDesktop } = useDevice();
+  const { get, stats } = useCachedApi({
+    ttl: 5 * 60 * 1000, // 5 minutes
+    invalidateOnMutate: true
+  });
 
-useEffect(() => {
-  const fetchTotals = async () => {
-    try {
-      const [tasksResponse, imagesResponse] = await Promise.all([
-        apiClient.get(`/tasks`),
-        apiClient.get(`/images`)
-      ]);
-      const taskData = tasksResponse.data;
-      const imageData = imagesResponse.data;
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        
+        const [tasksResult, imagesResult] = await Promise.all([
+          get<any>('/tasks'),
+          get<any>('/images')
+        ]);
 
-      const hasTasks = taskData.total_tasks > 0;
-      const hasImages = imageData.length > 0;
-      
-      setAnimationClass("animate__animated animate__tada");
-      setIsTasks(hasTasks);
-      setIsImages(hasImages);
-      
-    } catch (err) {
-      console.error('Error fetching data of totals:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  fetchTotals();
-}, []);
+        const taskData = tasksResult.data;
+        const imageData = imagesResult.data;
+
+        const hasTasks = taskData.total_tasks > 0;
+        const hasImages = imageData.length > 0;
+        
+        setAnimationClass("animate__animated animate__tada");
+        setIsTasks(hasTasks);
+        setIsImages(hasImages);
+
+        const cacheStats = stats();
+        console.log('Cache stats:', {
+          tasksFromCache: tasksResult.fromCache,
+          imagesFromCache: imagesResult.fromCache,
+          hitRate: cacheStats.hitRate,
+          size: cacheStats.size
+        });
+
+      } catch (err) {
+        console.error('Error fetching data:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [get, stats]);
+
 
   const handleNavigateToGenerate = () => {
     if (isDesktop) setAnimationType('slideInRight');
