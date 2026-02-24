@@ -9,10 +9,6 @@ import {
   Paper,
   Divider,
   CircularProgress,
-  Select,
-  FormControl,
-  InputLabel,
-  MenuItem,
   FormHelperText,
   Chip
 } from '@mui/material';
@@ -25,7 +21,6 @@ import DownloadIcon from '@mui/icons-material/Download';
 import { useCancellableGeneration } from '../hooks/useCancellableGeneration';
 import type { GenerationResult } from '../types/api';
 import { useDevice } from '../contexts/DeviceContext';
-import { Help } from '@mui/icons-material';
 
 const GenerateStream: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
