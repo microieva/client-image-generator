@@ -8,7 +8,13 @@ import {
   Alert,
   Paper,
   Divider,
-  CircularProgress
+  CircularProgress,
+  Select,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  FormHelperText,
+  Chip
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import Container from '@mui/material/Container';
@@ -19,10 +25,12 @@ import DownloadIcon from '@mui/icons-material/Download';
 import { useCancellableGeneration } from '../hooks/useCancellableGeneration';
 import type { GenerationResult } from '../types/api';
 import { useDevice } from '../contexts/DeviceContext';
+import { Help } from '@mui/icons-material';
 
 const GenerateStream: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
-  const [prompt, setPrompt] = useState('');
+  const [prompt, setPrompt] = useState<string>('');
+  const [model, setModel] = useState<string>('ai -1');
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState<boolean>(true);
   const [animationClass, setAnimationClass] = useState<string>('');
@@ -78,6 +86,7 @@ const GenerateStream: React.FC = () => {
     await cancel();
     setIsSubmitDisabled(false);
     setPrompt('');
+    setModel('ai -1');
     setGeneratedImage(null);
     resetGeneration();
     setIsExisting(false);
@@ -87,9 +96,12 @@ const GenerateStream: React.FC = () => {
     setIsExisting(true);
     resetGeneration();
     setPrompt('');
+    setModel('ai -1');
     setGeneratedImage(null);
     setIsExisting(false);
   };
+
+  const models = ['ai -1', 'ai -2', 'ai -3'];
 
   const handleDownload = () => {
     if (generatedImage) {
@@ -124,6 +136,7 @@ const GenerateStream: React.FC = () => {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
+          gap:'2rem',
           m: 'auto', 
           maxWidth:isMobile ? '95%': '60%',
           minHeight:'42vh',
@@ -145,11 +158,11 @@ const GenerateStream: React.FC = () => {
             gutterBottom
             data-testid="generate-title"
             id="generate-title" 
-            sx={{mb:(!loading && !error && !generatedImage) ? '8rem':'inherit'}}
           >
             Image Generator
           </Typography>
-          <Typography 
+          
+          {!loading && !error && !generatedImage && <Typography 
             variant="body1" 
             sx={{ mb: 3 }}
             data-testid="generate-description"
@@ -157,14 +170,32 @@ const GenerateStream: React.FC = () => {
             aria-live="polite" 
           >
             Create a prompt describing your image and expect the unexpected! 
-          </Typography>
+          </Typography>}
         </Box>
         
         <form onSubmit={handleSubmit}>
+          <Box sx={{display:'flex', alignItems:'bottom', justifyContent:'space-between', mb:1}}>
+            {!loading && !error && !generatedImage && <FormHelperText>Each model has a unique character and style!</FormHelperText> } 
+            <Box sx={{display:'flex', flexDirection:'column'}}>
+              <Box>
+                {models.map((m:string) => (
+                  <Chip 
+                    sx={{ml:1, fontSize:'8px'}} 
+                    label={m} 
+                    disabled={loading || Boolean(error) || Boolean(generatedImage)}
+                    size="small"
+                    variant={model === m ? "filled" : "outlined"} 
+                    onClick={() => setModel(m)} 
+                  />
+                ))} 
+              </Box>
+              {!loading && !error && !generatedImage && <FormHelperText sx={{alignSelf:'flex-end'}}>Choose model</FormHelperText>} 
+            </Box>
+          </Box>
           <TextField
             label="Describe your image..."
             variant="outlined"
-            value={generatedImage ? '' : prompt}
+            value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             fullWidth
             margin="normal"

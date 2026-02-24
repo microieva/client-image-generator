@@ -2,6 +2,7 @@ export interface ImageItem {
   task_id: string;
   prompt: string;
   image_url: string;
+  model_used: string;
   created_at?:string
 }
 

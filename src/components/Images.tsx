@@ -81,6 +81,12 @@ export const Images: React.FC = () => {
           <ImageList cols={isMobile ? 1 : 2}>
             {images.map((image) => (
               <ImageListItem key={image.task_id} sx={{maxWidth:isMobile ? '100vw':'45vw', height:isMobile ? 'auto':'45vw'}}>
+                <Chip 
+                  label={image.model_used} 
+                  size="small"
+                  variant="filled" 
+                  sx={{position:'absolute', top:8, left:8, fontSize:'6px', zIndex:1, display: image.model_used ? 'block' : 'none'}}
+                 />
                 <img
                   srcSet={`data:image/png;base64,${image.image_url}`}
                   src={`data:image/png;base64,${image.image_url}`}

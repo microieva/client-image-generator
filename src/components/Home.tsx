@@ -111,7 +111,7 @@ useEffect(() => {
           id="welcome-description" 
           aria-live="polite" 
         >
-          This is a tiny image generator built with React, FastAPI server and Stable Diffusion2.1
+          This is a tiny image generator built with React, FastAPI server and Hugging Face models. You can generate images based on text prompts, check the status of your running tasks and view the images you generated today. Feel free to explore and create something amazing!
         </Typography>
       </Box>
       <Divider 
