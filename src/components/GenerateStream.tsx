@@ -10,7 +10,8 @@ import {
   Divider,
   CircularProgress,
   FormHelperText,
-  Chip
+  Chip,
+  Tooltip
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import Container from '@mui/material/Container';
@@ -169,19 +170,22 @@ const GenerateStream: React.FC = () => {
         </Box>
         
         <form onSubmit={handleSubmit}>
-          <Box sx={{display:'flex', alignItems:'bottom', justifyContent:'space-between', mb:1}}>
+          <Box sx={{display:'flex', alignItems:'bottom', justifyContent:!loading ? 'space-between':'flex-end', mb:1}}>
             {!loading && !error && !generatedImage && <FormHelperText>Each model has a unique character and style!</FormHelperText> } 
             <Box sx={{display:'flex', flexDirection:'column'}}>
-              <Box>
+              <Box sx={{display:'flex'}}>
                 {models.map((m:string) => (
-                  <Chip 
-                    sx={{ml:1, fontSize:'8px'}} 
-                    label={m} 
-                    disabled={loading || Boolean(error) || Boolean(generatedImage)}
-                    size="small"
-                    variant={model === m ? "filled" : "outlined"} 
-                    onClick={() => setModel(m)} 
-                  />
+                  <Tooltip title={m} arrow placement="top">
+                    <Chip 
+                      sx={{ml:1, fontSize:'8px', display: loading && model !== m ? 'none' : 'inline-flex'}} 
+                      label={m}
+                      key={m}  
+                      disabled={loading || Boolean(error) || Boolean(generatedImage)}
+                      size="small"
+                      variant={model === m ? "filled" : "outlined"} 
+                      onClick={() => setModel(m)} 
+                    />
+                  </Tooltip>
                 ))} 
               </Box>
               {!loading && !error && !generatedImage && <FormHelperText sx={{alignSelf:'flex-end'}}>Choose model</FormHelperText>} 
@@ -421,7 +425,7 @@ const GenerateStream: React.FC = () => {
               flexDirection:'column',
               flex: isExiting ? 1 : 2, 
               opacity: isExiting ? 0 : 1,
-              minWidth: '50%',
+              //minWidth: '50%',
               transition: 'flex 0.5s ease-out, opacity 0.5s ease-out',
               overflow: 'hidden'
             }} 
@@ -429,6 +433,7 @@ const GenerateStream: React.FC = () => {
             <Box sx={{ 
               display: 'flex', 
               justifyContent: 'center',
+              alignItems: 'center',
               borderRadius: 2,
               flex: isExiting ? 0 : 1,
               opacity: isExiting ? 0 : 1,
@@ -437,7 +442,7 @@ const GenerateStream: React.FC = () => {
               transition: 'flex 0.5s ease-out, opacity 0.5s ease-out',
               overflow: 'hidden',
             }}>
-              {!generatedImage && <CircularProgress/>}
+              {!generatedImage && <CircularProgress size={50}/>}
 
             {generatedImage && 
               <img 
