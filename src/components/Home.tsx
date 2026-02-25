@@ -75,14 +75,6 @@ export const Home: React.FC = () => {
     navigate('/images');
   };
 
-  if (isLoading) {
-    return (
-        <Container maxWidth="lg" sx={{ minHeight:'85vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <CircularProgress />
-        </Container>
-    ); 
-  }
-
   return (
     <Container 
       maxWidth="lg" 
@@ -123,7 +115,6 @@ export const Home: React.FC = () => {
         
         <Typography 
           variant="body1" 
-          //sx={{ mb: 4 }} 
           data-testid="welcome-description"
           id="welcome-description" 
           aria-live="polite" 
@@ -171,7 +162,7 @@ export const Home: React.FC = () => {
           Go to Generate
         </Button>
         <Button
-          sx={{display: isTasks ? 'block' : 'none'}}
+          sx={{display: isTasks ? 'block' : 'none', margin: isLoading ? 'auto' : 0}}
           className={isTasks ? animationClass : ''}
           size="small"
           variant="contained"
@@ -188,10 +179,10 @@ export const Home: React.FC = () => {
             }
             }}
           >
-            Go to Tasks
+            {isLoading ? <CircularProgress size={20} /> : 'Go to Tasks'}
         </Button>
         <Button
-          sx={{display: isImages ? 'block' : 'none'}}
+          sx={{display: isImages ? 'block' : 'none', margin: isLoading ? 'auto' : 0}}
           className={isImages ? animationClass : ''}
           size="small"
           variant="contained"
@@ -208,7 +199,7 @@ export const Home: React.FC = () => {
             }
             }}
           >
-            Go to Images
+            {isLoading ? <CircularProgress size={20} /> : 'Go to Images'}
         </Button>
       </Box>
     </Container>
