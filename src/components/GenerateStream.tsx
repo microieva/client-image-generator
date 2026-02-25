@@ -423,7 +423,7 @@ const GenerateStream: React.FC = () => {
             sx={{ 
               display:'flex',
               flexDirection:'column',
-              flex: isExiting ? 1 : 2, 
+              flex: isExiting ? 0 : 1, 
               opacity: isExiting ? 0 : 1,
               //minWidth: '50%',
               transition: 'flex 0.5s ease-out, opacity 0.5s ease-out',
