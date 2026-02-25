@@ -85,11 +85,11 @@ export const Images: React.FC = () => {
                   label={image.model_used} 
                   size="small"
                   variant="filled" 
-                  sx={{position:'absolute', top:8, left:8, fontSize:'6px', zIndex:1, display: image.model_used ? 'block' : 'none'}}
+                  sx={{position:'absolute', top:8, left:8, fontSize:'6px', zIndex:1, visibility: image.model_used ? 'visible' : 'hidden'}}
                  />
                 <img
-                  srcSet={`data:image/png;base64,${image.image_url}`}
-                  src={`data:image/png;base64,${image.image_url}`}
+                  srcSet={image.image_url}
+                  src={image.image_url}
                   alt={`Generated image with prompt: ${image.prompt}`}
                   loading="lazy"
                   style={{borderRadius:5, maxHeight:'max-content'}} 

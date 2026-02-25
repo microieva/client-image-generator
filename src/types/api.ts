@@ -26,7 +26,8 @@ export interface GenerationResult {
     task_id: string 
     total_inference_time: string
     image: string 
-    prompt: string 
+    prompt: string,
+    model_used: string 
 }
 export interface StreamEvent { 
     event?:string

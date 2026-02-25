@@ -162,7 +162,7 @@ export const Home: React.FC = () => {
           Go to Generate
         </Button>
         <Button
-          sx={{display: isTasks ? 'block' : 'none', margin: isLoading ? 'auto' : 0}}
+          sx={{display: !isLoading && !isTasks ? 'none' : 'block', margin: isLoading ? 'auto' : 0}}
           className={isTasks ? animationClass : ''}
           size="small"
           variant="contained"
@@ -182,7 +182,7 @@ export const Home: React.FC = () => {
             {isLoading ? <CircularProgress size={20} /> : 'Go to Tasks'}
         </Button>
         <Button
-          sx={{display: isImages ? 'block' : 'none', margin: isLoading ? 'auto' : 0}}
+          sx={{display: !isLoading && !isImages ? 'none' : 'block', margin: isLoading ? 'auto' : 0}}
           className={isImages ? animationClass : ''}
           size="small"
           variant="contained"
