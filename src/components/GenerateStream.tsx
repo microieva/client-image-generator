@@ -11,7 +11,8 @@ import {
   CircularProgress,
   FormHelperText,
   Chip,
-  Tooltip
+  Tooltip,
+  Backdrop
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import Container from '@mui/material/Container';
@@ -67,7 +68,7 @@ const GenerateStream: React.FC = () => {
     e.preventDefault();
     if (!prompt.trim()) return;
     
-    await generate(prompt.trim());
+    await generate(prompt.trim(), model);
   };
 
   useEffect(() => {
@@ -97,7 +98,7 @@ const GenerateStream: React.FC = () => {
     setIsExisting(false);
   };
 
-  const models = ['ai -1', 'ai -2', 'ai -3'];
+  const models = ['ai -1', 'stabilityai/sdxl-turbo', 'ai -3'];
 
   const handleDownload = () => {
     if (generatedImage) {
@@ -127,6 +128,13 @@ const GenerateStream: React.FC = () => {
         justifyContent: isDesktop ? 'inherit':'space-between'
       }}
     >
+      <Backdrop
+          sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+          open={loading && !id}
+          // onClick={handleClose}
+        >
+          <CircularProgress color="inherit" />
+      </Backdrop> 
       <Box 
         sx={{ 
           display: 'flex',
@@ -425,7 +433,6 @@ const GenerateStream: React.FC = () => {
               flexDirection:'column',
               flex: isExiting ? 0 : 1, 
               opacity: isExiting ? 0 : 1,
-              //minWidth: '50%',
               transition: 'flex 0.5s ease-out, opacity 0.5s ease-out',
               overflow: 'hidden'
             }} 

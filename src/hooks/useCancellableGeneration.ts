@@ -33,7 +33,7 @@ export const useCancellableGeneration = (id?:string) => {
         id && getStream()
     }, [id])
 
-    const generate = useCallback(async (prompt: string): Promise<string | null> => {
+    const generate = useCallback(async (prompt: string, model:string): Promise<string | null> => {
         if (eventSourceRef.current) {
             eventSourceRef.current.close();
         }
@@ -46,7 +46,7 @@ export const useCancellableGeneration = (id?:string) => {
         try {
             const response = await apiClient.post(
                 `/generate`,
-                { prompt},
+                { prompt, model },
                 {
                     cancelToken: cancelTokenSource.current.token
                 }
@@ -81,11 +81,11 @@ export const useCancellableGeneration = (id?:string) => {
         }
     }, []);
 
-    const generateWithSSE = useCallback(async (prompt: string): Promise<GenerationResult | null> => {
+    const generateWithSSE = useCallback(async (prompt: string, model:string): Promise<GenerationResult | null> => {
         if (eventSourceRef.current) {
             eventSourceRef.current.close();
         }
-        const task_id = await generate(prompt);
+        const task_id = await generate(prompt, model);
 
         if (!task_id) {
             setState(prev => ({ ...prev, loading: false, error: 'Failed to start generation' }));
