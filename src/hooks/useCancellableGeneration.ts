@@ -11,7 +11,7 @@ export const useCancellableGeneration = (id?:string) => {
         progress: 0,
         taskId: id || null,
         cancelled: false,
-        status: 'pending',
+        status: '',
         message: undefined,
         prompt_str: id ? '':undefined,
         result: undefined
