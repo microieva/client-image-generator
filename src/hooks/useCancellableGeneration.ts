@@ -44,6 +44,10 @@ export const useCancellableGeneration = (id?:string) => {
         cancelTokenSource.current = axios.CancelToken.source();
 
         try {
+            setState(prev => ({ 
+                ...prev, 
+                loading: true
+            }));
             const response = await apiClient.post(
                 `/generate`,
                 { prompt, model },
@@ -85,6 +89,10 @@ export const useCancellableGeneration = (id?:string) => {
         if (eventSourceRef.current) {
             eventSourceRef.current.close();
         }
+        setState(prev => ({ 
+                ...prev, 
+                loading: true
+            }));
         const task_id = await generate(prompt, model);
 
         if (!task_id) {
@@ -92,8 +100,7 @@ export const useCancellableGeneration = (id?:string) => {
             return null;
         }
 
-        if (task_id) {
-            
+        if (task_id) {    
             return new Promise(() => {      
                 eventSourceRef.current = createEventSource(`/generate-stream/${task_id}`);
     
@@ -103,7 +110,6 @@ export const useCancellableGeneration = (id?:string) => {
                         if (data.event === "connected") {
                             setState(prev => ({
                                 ...prev,
-                                loading:true,
                                 message:data.message
                             }))
 
