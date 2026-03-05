@@ -114,8 +114,8 @@ const GenerateStream: React.FC = () => {
   return (
     <>
       <Backdrop
-        sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
-        open={ isSubmitDisabled && status==='' && !id}
+        sx={(theme) => ({ zIndex: theme.zIndex.drawer + 1 })}
+        open={ loading && status==='' && !id}
       >
         <CircularProgress color="inherit" />
       </Backdrop> 
